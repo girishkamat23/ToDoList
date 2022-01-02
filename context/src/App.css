@@ -1,0 +1,27 @@
+section {
+  display: flex;
+  margin: 15px;
+  flex-direction: column;
+}
+
+.btn {
+  line-height: 29px !important;
+  margin: 0px 10px !important;
+}
+
+.list-container {
+  width: 100%;
+}
+
+.todo-header {
+  margin: 10px;
+}
+
+.todo-body {
+  margin: 10px;
+}
+
+.app-title {
+  align-self: center;
+  color: darkslategrey;
+}
