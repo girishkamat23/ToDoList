@@ -9,14 +9,17 @@ import {
   ListItemText,
   TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FolderIcon from '@mui/icons-material/Folder';
+import TaskIcon from '@mui/icons-material/Task';
 import { v4 as uuidv4 } from 'uuid';
+import { FlourescentTwoTone } from '@mui/icons-material';
+import { convertDate } from './utils';
+import AppContext from './appContext';
 
 const ToDoList = () => {
-  const [text, setText] = useState('');
-  const [listArray, setListArray] = useState([]);
+  const { taskArray, setTaskArray, text, setText } = useContext(AppContext);
+  const bodyRef = useRef(null);
 
   const onChangeListener = (e) => {
     let value = e.target.value;
@@ -30,9 +33,9 @@ const ToDoList = () => {
         name: text,
         created: new Date().toISOString(),
       };
-      let listArr = [...listArray];
+      let listArr = [...taskArray];
       listArr.push(task);
-      setListArray(listArr);
+      setTaskArray(listArr);
       setText('');
     } else {
       alert('Cannot add empty task');
@@ -40,15 +43,16 @@ const ToDoList = () => {
   };
 
   const deleteTask = (id) => {
-    let listArr = [...listArray];
-    let index = listArray.findIndex((task) => task.id === id);
+    let listArr = [...taskArray];
+    let index = taskArray.findIndex((task) => task.id === id);
     listArr.splice(index, 1);
-    setListArray(listArr);
+    setTaskArray(listArr);
+    bodyRef.current.scrollIntoView();
   };
 
   return (
     <div className="list-container">
-      <div className="todo-header">
+      <div className="todo-header" ref={bodyRef}>
         <TextField
           className="mui-textfield"
           id="outlined-basic"
@@ -65,29 +69,28 @@ const ToDoList = () => {
       <Divider />
       <div className="todo-body">
         <List dense={true}>
-          {listArray && listArray.length ? (
-            listArray.map((task, index) => (
-              <ListItem
-                key={index}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => deleteTask(task.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                }>
-                <ListItemAvatar>
-                  <Avatar>
-                    <FolderIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={task?.name} secondary={task?.created} />
-              </ListItem>
-            ))
-          ) : (
-            <h2>No tasks added.</h2>
-          )}
+          {taskArray.map((task, index) => (
+            <ListItem
+              key={index}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTask(task.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              }>
+              <ListItemAvatar>
+                <Avatar>
+                  <TaskIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={task?.name}
+                secondary={convertDate(task?.created)}
+              />
+            </ListItem>
+          ))}
         </List>
       </div>
     </div>
