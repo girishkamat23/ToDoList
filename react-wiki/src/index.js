@@ -3,16 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AppContextProvider } from './appContext';
-import ErrorBoundary from './ErrorBoundary';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
-    </ErrorBoundary>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
